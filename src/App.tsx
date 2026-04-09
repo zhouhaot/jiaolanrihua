@@ -1,58 +1,32 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Layout, ConfigProvider } from 'tdesign-react'
 import { CartProvider } from './contexts/CartContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import CartPage from './components/CartPage'
 import CheckoutPage from './components/CheckoutPage'
-import ActivityMonitor from './components/ActivityMonitor'
 
-// 管理员页面组件
 const AdminPage = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">管理员控制台</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="lg:col-span-2">
-          <ActivityMonitor />
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">系统状态</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">后端服务器</span>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">运行中</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">数据库连接</span>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">已连接</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">实时通信</span>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">已启用</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">在线用户</span>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">3 人</span>
-            </div>
+    <div className="container-app py-16">
+      <div className="card-modern p-8">
+        <p className="pill mb-4">Admin Preview</p>
+        <h1 className="section-title mb-2">管理后台即将升级</h1>
+        <p className="section-subtitle">
+          下一阶段将补齐管理员看板，包括实时用户活动、转化漏斗、商品热度和订单洞察。
+        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">今日活跃用户</p>
+            <p className="mt-2 text-3xl font-bold text-slate-800">1,284</p>
           </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">快速操作</h2>
-          <div className="space-y-3">
-            <button className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
-              查看所有用户活动
-            </button>
-            <button className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
-              导出活动日志
-            </button>
-            <button className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
-              管理用户会话
-            </button>
-            <button className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
-              系统设置
-            </button>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">结算转化率</p>
+            <p className="mt-2 text-3xl font-bold text-slate-800">7.9%</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">加购率</p>
+            <p className="mt-2 text-3xl font-bold text-slate-800">28.4%</p>
           </div>
         </div>
       </div>
@@ -62,24 +36,22 @@ const AdminPage = () => {
 
 function App() {
   return (
-    <ConfigProvider globalConfig={{}}>
-      <CartProvider>
-        <Router>
-          <Layout className="min-h-screen flex flex-col">
-            <Navbar />
-            <Layout.Content className="flex-1">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-              </Routes>
-            </Layout.Content>
-            <Footer />
-          </Layout>
-        </Router>
-      </CartProvider>
-    </ConfigProvider>
+    <CartProvider>
+      <Router>
+        <div className="min-h-screen">
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/admin" element={<AdminPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </CartProvider>
   )
 }
 

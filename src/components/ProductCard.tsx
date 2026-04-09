@@ -1,5 +1,3 @@
-import { Card, Button, Space, Tag, Rate, Typography } from 'tdesign-react'
-import { CartIcon, HeartIcon } from 'tdesign-icons-react'
 import { Product } from '../data/products'
 
 interface ProductCardProps {
@@ -8,83 +6,58 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price
+  const discount = product.originalPrice
+    ? Math.round((1 - product.price / product.originalPrice) * 100)
+    : 0
 
   return (
-    <Card
-      className="h-full hover:shadow-lg transition-shadow duration-300"
-      bordered
-      header={
-        <div className="relative">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-48 object-cover rounded-t-lg"
-          />
-          <div className="absolute top-2 left-2">
-            <Space>
-              {product.tags.map((tag) => (
-                <Tag key={tag} theme="warning" size="small">
-                  {tag}
-                </Tag>
-              ))}
-            </Space>
-          </div>
-          <Button
-            shape="circle"
-            variant="outline"
-            className="absolute top-2 right-2 bg-white/80"
-            icon={<HeartIcon />}
-          />
+    <article className="card-modern group overflow-hidden transition hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1">
+          {product.tags.slice(0, 2).map((tag) => (
+            <span key={tag} className="rounded-full bg-white/90 px-2 py-1 text-xs font-semibold text-slate-700">
+              {tag}
+            </span>
+          ))}
         </div>
-      }
-      footer={
-        <Space className="w-full">
-          <Button
-            block
-            theme="primary"
-            icon={<CartIcon />}
-            onClick={() => onAddToCart(product)}
-            disabled={product.stock === 0}
-          >
-            {product.stock === 0 ? '已售罄' : '加入购物车'}
-          </Button>
-        </Space>
-      }
-    >
-      <div className="space-y-2">
-        <Typography.Title level="h4" className="text-lg font-semibold truncate">
-          {product.name}
-        </Typography.Title>
-        <Typography.Text className="text-gray-600 text-sm line-clamp-2">
-          {product.description}
-        </Typography.Text>
-        <div className="flex items-center justify-between">
-          <Rate allowHalf value={product.rating} disabled />
-          <Typography.Text theme="secondary" className="text-sm">
-            库存: {product.stock}
-          </Typography.Text>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Typography.Title level="h3" className="text-purple-700">
-            ¥{product.price}
-          </Typography.Title>
-          {hasDiscount && (
-            <Typography.Text delete theme="secondary">
-              ¥{product.originalPrice}
-            </Typography.Text>
-          )}
-          {hasDiscount && (
-            <Tag theme="danger" size="small">
-              -{Math.round((1 - product.price / product.originalPrice!) * 100)}%
-            </Tag>
-          )}
-        </div>
-        <Tag size="small" variant="outline">
-          {product.category}
-        </Tag>
+        {discount > 0 && (
+          <span className="absolute right-3 top-3 rounded-full bg-[#0f6fff] px-2 py-1 text-xs font-bold text-white">
+            省 {discount}%
+          </span>
+        )}
       </div>
-    </Card>
+
+      <div className="space-y-3 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{product.category}</p>
+        <h3 className="line-clamp-1 text-lg font-bold text-slate-900">{product.name}</h3>
+        <p className="min-h-[44px] text-sm text-slate-600">{product.description}</p>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xl font-bold text-slate-900">¥{product.price}</p>
+            {product.originalPrice && (
+              <p className="text-sm text-slate-400 line-through">¥{product.originalPrice}</p>
+            )}
+          </div>
+          <p className="text-xs text-slate-500">库存 {product.stock}</p>
+        </div>
+
+        <button
+          type="button"
+          className="btn-modern btn-primary w-full rounded-xl px-4 py-2.5 text-sm"
+          disabled={product.stock <= 0}
+          onClick={() => onAddToCart(product)}
+          style={product.stock <= 0 ? { opacity: 0.45, cursor: 'not-allowed' } : undefined}
+        >
+          {product.stock <= 0 ? '暂时售罄' : '加入购物车'}
+        </button>
+      </div>
+    </article>
   )
 }
 

@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Row, Col, Select, Pagination, Space, Typography } from 'tdesign-react'
+import { useMemo, useState } from 'react'
 import ProductCard from './ProductCard'
 import { products, Product } from '../data/products'
 import { useCart } from '../contexts/CartContext'
@@ -10,84 +9,94 @@ const ProductList = () => {
   const [sortBy, setSortBy] = useState('default')
   const { addItem } = useCart()
 
-  const categories = ['all', '护肤', '彩妆', '香水', '个人护理', '男士系列']
-  
-  const filteredProducts = products.filter(product => 
-    selectedCategory === 'all' || product.category === selectedCategory
-  )
+  const categories = useMemo(() => ['all', ...new Set(products.map((item) => item.category))], [])
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-asc':
-        return a.price - b.price
-      case 'price-desc':
-        return b.price - a.price
-      case 'rating':
-        return b.rating - a.rating
-      default:
-        return 0
-    }
-  })
+  const sortedProducts = useMemo(() => {
+    const filtered = products.filter((product) => selectedCategory === 'all' || product.category === selectedCategory)
+
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-asc':
+          return a.price - b.price
+        case 'price-desc':
+          return b.price - a.price
+        case 'rating':
+          return b.rating - a.rating
+        default:
+          return 0
+      }
+    })
+  }, [selectedCategory, sortBy])
 
   const pageSize = 8
-  const total = sortedProducts.length
-  const startIndex = (currentPage - 1) * pageSize
-  const paginatedProducts = sortedProducts.slice(startIndex, startIndex + pageSize)
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize))
+  const page = Math.min(currentPage, totalPages)
+  const paginatedProducts = sortedProducts.slice((page - 1) * pageSize, page * pageSize)
 
-  const handleAddToCart = (product: Product) => {
-    addItem(product, 1)
-  }
+  const handleAddToCart = (product: Product) => addItem(product, 1)
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <Typography.Title level="h3" className="mb-4 md:mb-0">
-          精选产品 ({total})
-        </Typography.Title>
-        <Space>
-          <Select
-            placeholder="按分类筛选"
+      <div className="card-modern flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
+        <p className="text-sm font-medium text-slate-600">共 {sortedProducts.length} 个结果</p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <select
+            className="select-modern min-w-[160px]"
             value={selectedCategory}
-            onChange={(value) => {
-              setSelectedCategory(value as string)
+            onChange={(event) => {
+              setSelectedCategory(event.target.value)
               setCurrentPage(1)
             }}
-            options={categories.map(cat => ({ label: cat === 'all' ? '全部' : cat, value: cat }))}
-            className="w-40"
-          />
-          <Select
-            placeholder="排序方式"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category === 'all' ? '全部分类' : category}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="select-modern min-w-[180px]"
             value={sortBy}
-            onChange={(value) => setSortBy(value as string)}
-            options={[
-              { label: '默认排序', value: 'default' },
-              { label: '价格从低到高', value: 'price-asc' },
-              { label: '价格从高到低', value: 'price-desc' },
-              { label: '按评分排序', value: 'rating' },
-            ]}
-            className="w-40"
-          />
-        </Space>
-      </div>
-      <Row gutter={16}>
-        {paginatedProducts.map((product) => (
-          <Col key={product.id} xs={12} sm={8} md={6} lg={4} xl={3}>
-            <ProductCard product={product} onAddToCart={handleAddToCart} />
-          </Col>
-        ))}
-      </Row>
-      {total > pageSize && (
-        <div className="flex justify-center mt-8">
-          <Pagination
-            total={total}
-            pageSize={pageSize}
-            current={currentPage}
-            onChange={(pageInfo) => setCurrentPage(pageInfo.current)}
-            showJumper
-            showPageSize={false}
-          />
+            onChange={(event) => setSortBy(event.target.value)}
+          >
+            <option value="default">综合排序</option>
+            <option value="price-asc">价格从低到高</option>
+            <option value="price-desc">价格从高到低</option>
+            <option value="rating">评分优先</option>
+          </select>
         </div>
-      )}
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" id="new">
+        {paginatedProducts.map((product) => (
+          <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
+        ))}
+      </div>
+
+      <div className="flex items-center justify-center gap-2">
+        <button
+          type="button"
+          className="btn-modern btn-secondary px-4 py-2 text-sm"
+          onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+          disabled={page === 1}
+          style={page === 1 ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+        >
+          上一页
+        </button>
+        <span className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600">
+          第 {page} / {totalPages} 页
+        </span>
+        <button
+          type="button"
+          className="btn-modern btn-secondary px-4 py-2 text-sm"
+          onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+          disabled={page === totalPages}
+          style={page === totalPages ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+        >
+          下一页
+        </button>
+      </div>
     </div>
   )
 }

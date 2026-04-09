@@ -1,58 +1,47 @@
-import { Typography, Space, Link, Divider } from 'tdesign-react'
-import { LogoWechatStrokeIcon, LogoQqIcon, LogoTwitterIcon } from 'tdesign-icons-react'
+const columns = [
+  {
+    title: '客户服务',
+    links: ['帮助中心', '配送说明', '退换政策', '支付方式']
+  },
+  {
+    title: '品牌信息',
+    links: ['品牌故事', '门店体验', '合作联系', '加入我们']
+  },
+  {
+    title: '购物指南',
+    links: ['新手指南', '积分规则', '隐私政策', '用户协议']
+  }
+]
 
 const Footer = () => {
-  const footerLinks = [
-    { title: '客户服务', links: ['帮助中心', '联系我们', '退换货政策', '配送信息'] },
-    { title: '关于我们', links: ['公司简介', '品牌故事', '招贤纳士', '门店查询'] },
-    { title: '购物指南', links: ['新手指南', '会员制度', '优惠券使用', '常见问题'] },
-    { title: '商务合作', links: ['供应商入驻', '广告合作', '企业采购', '渠道合作'] },
-  ]
-
   return (
-    <footer className="bg-gray-900 text-white mt-12">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer className="mt-20 border-t border-slate-200 bg-white/80 py-12">
+      <div className="container-app">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Typography.Title level="h3" className="text-white mb-4">娇兰日化</Typography.Title>
-            <Typography.Text className="text-gray-300">
-              专注日化用品零售，为您提供优质的护肤、彩妆、香水及个人护理产品。
-            </Typography.Text>
-            <Space className="mt-4">
-              <Link href="#" theme="primary" hover="color">
-                <LogoWechatStrokeIcon size="24px" />
-              </Link>
-              <Link href="#" theme="primary" hover="color">
-                <LogoQqIcon size="24px" />
-              </Link>
-              <Link href="#" theme="primary" hover="color">
-                <LogoTwitterIcon size="24px" />
-              </Link>
-            </Space>
+            <p className="text-xl font-bold text-slate-900">娇兰日化</p>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              用现代化体验连接高品质日化产品，让每次购买都更高效、更安心、更有愉悦感。
+            </p>
           </div>
-          {footerLinks.map((section) => (
-            <div key={section.title}>
-              <Typography.Title level="h4" className="text-white mb-4">{section.title}</Typography.Title>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link}>
-                    <Link href="#" theme="primary" hover="color" className="text-gray-300 hover:text-white">
-                      {link}
-                    </Link>
+
+          {columns.map((column) => (
+            <div key={column.title}>
+              <p className="text-sm font-bold text-slate-900">{column.title}</p>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                {column.links.map((link) => (
+                  <li key={link} className="transition hover:text-slate-900">
+                    <a href="#">{link}</a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <Divider className="my-8 border-gray-700" />
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <Typography.Text className="text-gray-400">
-            © 2025 娇兰日化 版权所有
-          </Typography.Text>
-          <Typography.Text className="text-gray-400 mt-2 md:mt-0">
-            备案号：沪ICP备12345678号
-          </Typography.Text>
+
+        <div className="mt-10 flex flex-col gap-2 border-t border-slate-200 pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>© 2026 娇兰日化. All Rights Reserved.</p>
+          <p>备案号：浙ICP备12345678号-1</p>
         </div>
       </div>
     </footer>
