@@ -1,12 +1,6 @@
-
-
-// @ts-ignore
 import { defineConfig } from 'vite'
-// @ts-ignore  
 import react from '@vitejs/plugin-react'
 
-
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -18,11 +12,33 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         modifyVars: {
-          '@btn-height-default': '40px',
+          '@btn-height-default': '40px'
         },
-        javascriptEnabled: true,
+        javascriptEnabled: true
+      }
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+            return 'framework'
+          }
+
+          if (id.includes('tdesign-react') || id.includes('tdesign-icons-react')) {
+            return 'ui-kit'
+          }
+
+          if (id.includes('socket.io-client')) {
+            return 'realtime'
+          }
+          
+          return undefined
+        }
       }
     }
   }
 })
-

@@ -3,23 +3,23 @@ import ProductList from '../components/ProductList'
 
 const featureCards = [
   {
-    title: '极速发货',
-    description: '全国重点城市次日达，支持门店自提和时段配送。',
+    title: 'Fast Shipping',
+    description: 'Next-day delivery in major cities with pickup support.',
     tone: 'from-[#d6e7ff] to-[#eef4ff]'
   },
   {
-    title: '正品保障',
-    description: '品牌官方授权链路，批次可追溯，支持验真。',
+    title: 'Authentic Supply',
+    description: 'Official channel sourcing and transparent batch traceability.',
     tone: 'from-[#ffe7d7] to-[#fff4ec]'
   },
   {
-    title: '专业建议',
-    description: '按肤质和场景推荐搭配，降低试错成本。',
+    title: 'Pro Recommendations',
+    description: 'Build routines by skin type and daily scenarios.',
     tone: 'from-[#def6ea] to-[#f1fbf6]'
   },
   {
-    title: '会员权益',
-    description: '积分返利、生日礼遇、专属活动优先参与。',
+    title: 'Member Benefits',
+    description: 'Points, birthday perks, and early-access campaigns.',
     tone: 'from-[#ede2ff] to-[#f7f2ff]'
   }
 ]
@@ -49,8 +49,8 @@ const HomePage = () => {
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="pill">Hot Picks</p>
-            <h2 className="section-title mt-3">本周热门商品</h2>
-            <p className="section-subtitle mt-2">基于近 7 日浏览、加购和转化数据动态排序。</p>
+            <h2 className="section-title mt-3">Top products this week</h2>
+            <p className="section-subtitle mt-2">Ranked by visits, add-to-cart actions, and conversions over the last 7 days.</p>
           </div>
         </div>
         <ProductList />
