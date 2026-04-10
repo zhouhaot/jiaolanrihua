@@ -28,6 +28,10 @@ body,
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Space Grotesk', 'Noto Sans SC', 'Segoe UI', sans-serif;
@@ -43,9 +47,36 @@ a {
   text-decoration: none;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
 .container-app {
   width: min(1200px, calc(100% - 2rem));
   margin: 0 auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  border-radius: 0.6rem;
+  background: #0f6fff;
+  color: #fff;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
 }
 
 .glass {
@@ -90,11 +121,6 @@ a {
   transform: translateY(-1px);
 }
 
-.btn-modern:focus-visible {
-  outline: 3px solid var(--ring);
-  outline-offset: 2px;
-}
-
 .btn-primary {
   background: linear-gradient(130deg, var(--brand) 0%, #3887ff 60%, #76a9ff 100%);
   color: #fff;
@@ -120,7 +146,6 @@ a {
 
 .input-modern:focus,
 .select-modern:focus {
-  outline: 3px solid var(--ring);
   border-color: #95bcff;
 }
 
@@ -148,6 +173,24 @@ a {
   animation: fade-in-up 0.5s ease both;
 }
 
+.mobile-sticky-bar {
+  position: fixed;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 1rem));
+  z-index: 40;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 0.7rem;
+}
+
+.anchor-offset {
+  scroll-margin-top: 6rem;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -162,5 +205,20 @@ a {
 @media (max-width: 768px) {
   .container-app {
     width: min(1200px, calc(100% - 1rem));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -56,7 +56,7 @@ const CheckoutPage = () => {
   if (orderNo) {
     return (
       <section className="container-app py-16">
-        <div className="card-modern mx-auto max-w-2xl p-10 text-center">
+        <div className="card-modern mx-auto max-w-2xl p-10 text-center" aria-live="polite">
           <p className="pill mx-auto">Order Complete</p>
           <h1 className="mt-4 text-3xl font-bold text-slate-900">Payment successful</h1>
           <p className="mt-3 text-slate-600">Thank you for your purchase. Your order is now being processed.</p>
@@ -90,7 +90,7 @@ const CheckoutPage = () => {
   }
 
   return (
-    <section className="container-app py-10">
+    <section className="container-app py-10 pb-24 md:pb-10">
       <div className="mb-6">
         <p className="pill">Checkout</p>
         <h1 className="section-title mt-2">Secure checkout</h1>
@@ -102,19 +102,33 @@ const CheckoutPage = () => {
           <article className="card-modern p-5">
             <h2 className="text-lg font-bold text-slate-900">Shipping info</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-slate-600">
+              <label className="space-y-2 text-sm text-slate-600" htmlFor="shipping-name">
                 <span>Full name</span>
-                <input className="input-modern" value={form.name} onChange={(e) => handleChange('name', e.target.value)} placeholder="Enter your name" />
+                <input
+                  id="shipping-name"
+                  className="input-modern"
+                  value={form.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  placeholder="Enter your name"
+                  autoComplete="name"
+                />
               </label>
-              <label className="space-y-2 text-sm text-slate-600">
+              <label className="space-y-2 text-sm text-slate-600" htmlFor="shipping-phone">
                 <span>Phone</span>
-                <input className="input-modern" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} placeholder="Enter phone number" />
+                <input
+                  id="shipping-phone"
+                  className="input-modern"
+                  value={form.phone}
+                  onChange={(e) => handleChange('phone', e.target.value)}
+                  placeholder="Enter phone number"
+                  autoComplete="tel"
+                />
               </label>
             </div>
             <div className="mt-4 grid gap-4">
-              <label className="space-y-2 text-sm text-slate-600">
+              <label className="space-y-2 text-sm text-slate-600" htmlFor="shipping-region">
                 <span>Region</span>
-                <select className="select-modern" value={form.region} onChange={(e) => handleChange('region', e.target.value)}>
+                <select id="shipping-region" className="select-modern" value={form.region} onChange={(e) => handleChange('region', e.target.value)}>
                   <option value="">Select region</option>
                   <option value="Beijing">Beijing</option>
                   <option value="Shanghai">Shanghai</option>
@@ -123,18 +137,21 @@ const CheckoutPage = () => {
                   <option value="Hangzhou">Hangzhou</option>
                 </select>
               </label>
-              <label className="space-y-2 text-sm text-slate-600">
+              <label className="space-y-2 text-sm text-slate-600" htmlFor="shipping-address">
                 <span>Street address</span>
                 <textarea
+                  id="shipping-address"
                   className="input-modern min-h-[96px]"
                   value={form.address}
                   onChange={(e) => handleChange('address', e.target.value)}
                   placeholder="Apartment, suite, street, district"
+                  autoComplete="street-address"
                 />
               </label>
-              <label className="space-y-2 text-sm text-slate-600">
+              <label className="space-y-2 text-sm text-slate-600" htmlFor="shipping-note">
                 <span>Order note (optional)</span>
                 <textarea
+                  id="shipping-note"
                   className="input-modern min-h-[84px]"
                   value={form.note}
                   onChange={(e) => handleChange('note', e.target.value)}
@@ -146,7 +163,7 @@ const CheckoutPage = () => {
 
           <article className="card-modern p-5">
             <h2 className="text-lg font-bold text-slate-900">Payment method</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Payment method">
               {[
                 { key: 'alipay', label: 'Alipay' },
                 { key: 'wechat', label: 'WeChat Pay' },
@@ -157,6 +174,8 @@ const CheckoutPage = () => {
                   <button
                     key={option.key}
                     type="button"
+                    role="radio"
+                    aria-checked={active}
                     className="btn-modern rounded-xl border px-4 py-3 text-sm font-semibold"
                     style={
                       active
@@ -203,13 +222,18 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          {errorText && <p className="mt-4 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-600">{errorText}</p>}
+          {errorText && (
+            <p className="mt-4 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-600" role="alert" aria-live="assertive">
+              {errorText}
+            </p>
+          )}
 
           <button
             type="button"
             className="btn-modern btn-primary mt-5 w-full rounded-xl px-4 py-3 text-sm"
             onClick={handleSubmit}
             disabled={!canSubmit}
+            aria-disabled={!canSubmit}
             style={!canSubmit ? { opacity: 0.45, cursor: 'not-allowed' } : undefined}
           >
             Place order
@@ -218,6 +242,24 @@ const CheckoutPage = () => {
             Back to cart
           </Link>
         </aside>
+      </div>
+
+      <div className="mobile-sticky-bar md:hidden" aria-label="Mobile place-order bar">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs text-slate-300">Total</p>
+            <p className="text-xl font-bold">¥{totalPrice.toFixed(2)}</p>
+          </div>
+          <button
+            type="button"
+            className="btn-modern btn-primary rounded-xl px-5 py-2.5 text-sm"
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+            style={!canSubmit ? { opacity: 0.45, cursor: 'not-allowed' } : undefined}
+          >
+            Place order
+          </button>
+        </div>
       </div>
     </section>
   )

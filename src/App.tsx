@@ -10,7 +10,7 @@ const CheckoutPage = lazy(() => import('./components/CheckoutPage'))
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 
 const RouteFallback = () => (
-  <div className="container-app py-12">
+  <div className="container-app py-12" aria-live="polite" aria-busy="true">
     <div className="card-modern animate-pulse p-6">
       <div className="h-4 w-28 rounded bg-slate-200" />
       <div className="mt-4 h-8 w-2/5 rounded bg-slate-200" />
@@ -28,9 +28,12 @@ function App() {
   return (
     <CartProvider>
       <Router>
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <div className="min-h-screen">
           <Navbar />
-          <main>
+          <main id="main-content" tabIndex={-1}>
             <Suspense fallback={<RouteFallback />}>
               <Routes>
                 <Route path="/" element={<HomePage />} />

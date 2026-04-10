@@ -29,7 +29,7 @@ const HomePage = () => {
     <div>
       <Hero />
 
-      <section className="container-app pb-10" id="story">
+      <section className="container-app pb-10 anchor-offset" id="story">
         <div className="bento">
           {featureCards.map((item, index) => (
             <article
@@ -45,7 +45,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="container-app pb-16" id="hot">
+      <section className="container-app pb-16 anchor-offset" id="hot">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="pill">Hot Picks</p>

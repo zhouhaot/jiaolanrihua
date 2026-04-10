@@ -1,9 +1,9 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 
 const navItems = [
-  { label: 'Home', to: '/' },
+  { label: 'Home', to: '/#top' },
   { label: 'Hot', to: '/#hot' },
   { label: 'New', to: '/#new' },
   { label: 'Story', to: '/#story' }
@@ -20,20 +20,36 @@ const Navbar = () => {
     event.preventDefault()
     const q = keyword.trim()
     navigate(q ? `/?q=${encodeURIComponent(q)}#hot` : '/#hot')
+    setIsOpen(false)
   }
+
+  useEffect(() => {
+    setIsOpen(false)
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/50 bg-white/70 backdrop-blur-xl">
       <div className="container-app">
-        <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 py-2">
-          <Link to="/" className="flex items-center gap-2">
+        <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 py-2" id="top">
+          <Link to="/" className="flex items-center gap-2" aria-label="Go to homepage">
             <span className="rounded-xl bg-[linear-gradient(120deg,#0f6fff,#59a0ff)] px-3 py-2 text-sm font-bold text-white">
               GL
             </span>
             <span className="text-lg font-bold tracking-tight text-slate-900">JiaoLan Beauty</span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
             {navItems.map((item) => (
               <a key={item.label} href={item.to} className="text-sm font-medium text-slate-600 transition hover:text-slate-950">
                 {item.label}
@@ -41,7 +57,7 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <form onSubmit={submitSearch} className="hidden w-[280px] items-center md:flex">
+          <form onSubmit={submitSearch} className="hidden w-[280px] items-center md:flex" role="search" aria-label="Product search">
             <input
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
@@ -55,10 +71,11 @@ const Navbar = () => {
             <Link
               to="/cart"
               className="relative rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:shadow-sm"
+              aria-label={`Cart, ${totalItems} items`}
             >
               Cart
               {totalItems > 0 && (
-                <span className="absolute -right-2 -top-2 rounded-full bg-[#0f6fff] px-2 text-xs font-bold leading-5 text-white">
+                <span className="absolute -right-2 -top-2 rounded-full bg-[#0f6fff] px-2 text-xs font-bold leading-5 text-white" aria-hidden="true">
                   {totalItems}
                 </span>
               )}
@@ -73,15 +90,17 @@ const Navbar = () => {
             className="rounded-xl border border-slate-200 px-3 py-2 text-sm md:hidden"
             onClick={() => setIsOpen((prev) => !prev)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
           >
             Menu
           </button>
         </div>
 
         {isOpen && (
-          <div className="pb-4 md:hidden">
+          <div className="pb-4 md:hidden" id="mobile-nav">
             <div className="card-modern flex flex-col gap-2 p-3">
-              <form onSubmit={submitSearch}>
+              <form onSubmit={submitSearch} role="search" aria-label="Mobile product search">
                 <input
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
@@ -101,11 +120,6 @@ const Navbar = () => {
               <Link to="/checkout" className="btn-modern btn-primary mt-1 px-3 py-2 text-center text-sm">
                 Go Checkout
               </Link>
-              {location.pathname !== '/' && (
-                <Link to="/" className="btn-modern btn-secondary px-3 py-2 text-center text-sm">
-                  Back Home
-                </Link>
-              )}
             </div>
           </div>
         )}

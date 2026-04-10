@@ -25,7 +25,7 @@ const CartPage = () => {
   }
 
   return (
-    <section className="container-app py-10">
+    <section className="container-app py-10 pb-24 md:pb-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="pill">Shopping cart</p>
@@ -46,12 +46,12 @@ const CartPage = () => {
                 <p className="mt-1 text-sm text-slate-500">{item.category}</p>
                 <p className="mt-2 text-sm font-semibold text-slate-700">¥{item.price} / item</p>
               </div>
-              <div className="flex items-center gap-2">
-                <button type="button" className="btn-modern btn-secondary h-9 w-9" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+              <div className="flex items-center gap-2" aria-label={`Quantity controls for ${item.name}`}>
+                <button type="button" className="btn-modern btn-secondary h-9 w-9" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label={`Decrease quantity of ${item.name}`}>
                   -
                 </button>
-                <span className="min-w-[2rem] text-center text-sm font-bold">{item.quantity}</span>
-                <button type="button" className="btn-modern btn-secondary h-9 w-9" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                <span className="min-w-[2rem] text-center text-sm font-bold" aria-live="polite">{item.quantity}</span>
+                <button type="button" className="btn-modern btn-secondary h-9 w-9" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label={`Increase quantity of ${item.name}`}>
                   +
                 </button>
               </div>
@@ -78,8 +78,9 @@ const CartPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs text-slate-500">Promo code (try NEW10)</label>
+              <label className="text-xs text-slate-500" htmlFor="promo-code">Promo code (try NEW10)</label>
               <input
+                id="promo-code"
                 value={promo}
                 onChange={(e) => setPromo(e.target.value)}
                 placeholder="Enter code"
@@ -112,6 +113,18 @@ const CartPage = () => {
             </Link>
           </div>
         </aside>
+      </div>
+
+      <div className="mobile-sticky-bar md:hidden" aria-label="Mobile checkout bar">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs text-slate-300">Total</p>
+            <p className="text-xl font-bold">¥{finalPrice.toFixed(2)}</p>
+          </div>
+          <Link to="/checkout" className="btn-modern btn-primary rounded-xl px-5 py-2.5 text-sm">
+            Checkout
+          </Link>
+        </div>
       </div>
     </section>
   )
